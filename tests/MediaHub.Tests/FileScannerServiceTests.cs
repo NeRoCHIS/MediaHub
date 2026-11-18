@@ -1,4 +1,10 @@
-﻿using MediaHub.Data;
+﻿//FileScannerService відповідає за наповнення бази.
+//Він обходить папку, фабрика за розширенням створює потрібний клас,
+//поліморфний метод ExtractMetadata() читає теги,
+//а DbContext зберігає результат. Інтерфейс про це нічого не знає,
+//тому логіку можна змінювати й тестувати окремо
+
+using MediaHub.Data;
 using MediaHub.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

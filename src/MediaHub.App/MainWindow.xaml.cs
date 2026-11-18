@@ -1,23 +1,26 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using Microsoft.Win32;
 
 namespace MediaHub.App;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
+    private readonly MainViewModel _viewModel = new();
+
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = _viewModel;
+        Loaded += async (_, _) => await _viewModel.LoadAsync();
+    }
+
+    // Кнопка "Додати папку": діалог вибору папки, потім сканування
+    private async void ScanButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFolderDialog();
+        if (dialog.ShowDialog() == true)
+        {
+            await _viewModel.ScanFolderAsync(dialog.FolderName);
+        }
     }
 }
