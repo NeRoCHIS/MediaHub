@@ -15,6 +15,10 @@ public class MediaDbContext : DbContext
     public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
     public DbSet<AudioTrack> AudioTracks => Set<AudioTrack>();
     public DbSet<VideoFile> VideoFile => Set<VideoFile>();
+    
+    public DbSet<Playlist> Playlists => Set<Playlist>();
+    
+    public DbSet<PlaylistItem> PlaylistItems => Set<PlaylistItem>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {

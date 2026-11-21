@@ -1,14 +1,18 @@
 ﻿<Window x:Class="MediaHub.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MediaHub" Height="750" Width="900">
+        Title="MediaHub" Height="750" Width="1000">
     <DockPanel Margin="10">
 
         <!-- Верхня панель: кнопка та пошук -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
             <Button Content="Додати папку" Padding="12,4" Click="ScanButton_Click"/>
+            <Button Content="В плейлист..." Padding=" 12,4" Margin="5,0,0,0"
+                Click="AddToPlaylistButton_Click"/> 
+            <Button Content="Прибрати з плейлиста" Padding="12,4" Margin="5,0,0,0"
+                    Click="RemoveFromPlaylistButton_Click"/>
             <TextBlock Text="Пошук:" VerticalAlignment="Center" Margin="20,0,5,0"/>
-            <TextBox Width="250"
+            <TextBox Width="200"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
@@ -28,11 +32,28 @@
 
         <ProgressBar x:Name="PlayProgress" DockPanel.Dock="Bottom" Height="10" Margin="0,10,0,0"/>
 
-        <MediaElement x:Name="Player" DockPanel.Dock="Bottom" Height="220" Margin="0,10,0,0"
+        <MediaElement x:Name="Player" DockPanel.Dock="Bottom" Height="200" Margin="0,10,0,0"
                       MediaOpened="Player_MediaOpened"
                       MediaEnded="Player_MediaEnded"
                       MediaFailed="Player_MediaFailed"/>
 
+        <!-- Ліва панель: плейлисти -->
+        <StackPanel DockPanel.Dock="Left" Width="190" Margin="0,0,10,0">
+            <TextBlock Text="Плейлисти" FontWeight="Bold" Margin="0,0,0,5"/>
+            <ListBox ItemsSource="{Binding Playlists}"
+                     SelectedItem="{Binding SelectedPlaylist}"
+                     DisplayMemberPath="Name"
+                     Height="280"/>
+            <Button Content="Показати всі файли" Margin="0,5,0,0" Padding="0,4"
+                    Click="ShowAllButton_Click"/>
+            <TextBox Margin="0,15,0,0"
+                     Text="{Binding NewPlaylistName, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="Створити плейлист" Margin="0,5,0,0" Padding="0,4"
+                    Click="CreatePlaylistButton_Click"/>
+            <Button Content="Видалити плейлист" Margin="0,15,0,0" Padding="0,4"
+                    Click="DeletePlaylistButton_Click"/>
+        </StackPanel>
+        
         <!-- Таблиця медіатеки -->
         <DataGrid ItemsSource="{Binding Files}"
                   SelectedItem="{Binding SelectedFile}"

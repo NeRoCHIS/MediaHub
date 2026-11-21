@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using MediaHub.Core.Models;
 using Microsoft.Win32;
@@ -21,9 +22,14 @@ public partial class MainWindow : Window
         _player.PositionChanged += UpdateProgress;
         VolumeSlider.ValueChanged += (_, e) => _player.Volume = e.NewValue;
 
-        Loaded += async (_, _) => await _viewModel.LoadAsync();
+        Loaded += async (_, _) =>
+        {
+            await _viewModel.LoadAsync();
+            await _viewModel.LoadAsync();
+        };
     }
-
+    
+    // ----- Бібліотека -----
     // Кнопка "Додати папку": діалог вибору папки, потім сканування
     private async void ScanButton_Click(object sender, RoutedEventArgs e)
     {
@@ -34,6 +40,45 @@ public partial class MainWindow : Window
         }
     }
 
+    // ----- Плейлисти -----
+
+    private async void CreatePlaylistButton_Click(object sender, RoutedEventArgs e)
+        => await _viewModel.CreatePlaylistAsync();
+
+    private async void DeletePlaylistButton_Click(object sender, RoutedEventArgs e)
+        => await _viewModel.DeletePlaylistAsync();
+
+    private async void RemoveFromPlaylistButton_Click(object sender, RoutedEventArgs e)
+        => await _viewModel.RemoveFromPlaylistAsync();
+
+    // Скидаємо вибір плейлиста: у таблиці знову всі файли
+    private void ShowAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        _viewModel.SelectedPlaylist = null;
+    }
+    
+    // Кнопка "В плейлист...": показує меню з усіма плейлистами
+    private void AddToPlaylistButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.Playlists.Count == 0)
+        {
+            _viewModel.Status = "Спочатку створіть плейлист";
+            return;
+        }
+
+        var menu = new ContextMenu();
+        foreach (var playlist in _viewModel.Playlists)
+        {
+            var item = new MenuItem { Header = playlist.Name };
+            item.Click += async (_, _) => await _viewModel.AddToPlaylistAsync(playlist);
+            menu.Items.Add(item);
+        }
+
+        menu.PlacementTarget = (Button)sender;
+        menu.IsOpen = true;
+    }
+    // ----- Відтворення -----
+    
     // Подвійний клік по рядку: відтворити вибраний файл
     private void Grid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
