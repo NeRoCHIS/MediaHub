@@ -24,8 +24,8 @@ public partial class MainWindow : Window
 
         Loaded += async (_, _) =>
         {
-            await _viewModel.LoadAsync();
-            await _viewModel.LoadAsync();
+            await _viewModel.LoadPlaylistsAsync();
+            await _viewModel.LoadFiltersAsync();
         };
     }
     
