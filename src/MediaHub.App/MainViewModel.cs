@@ -271,4 +271,27 @@ public partial class MainViewModel : ObservableObject
         if (!_updatingFilters) _ = LoadAsync();
     }
     
+    // Видаляє вибраний файл із бібліотеки (файл на диску лишається)
+    public async Task DeleteSelectedFileAsync()
+    {
+        if (SelectedFile == null)
+        {
+            Status = "Спочатку виберіть файл у таблиці";
+            return;
+        }
+
+        var file = SelectedFile;
+
+        using var db = new MediaDbContext(_databasePath);
+        var entity = await db.MediaFiles.FindAsync(file.Id);
+        if (entity != null)
+        {
+            db.MediaFiles.Remove(entity);
+            await db.SaveChangesAsync();
+        }
+
+        Files.Remove(file);
+        Status = $"«{file.Title}» видалено з бібліотеки";
+    }
+    
 }

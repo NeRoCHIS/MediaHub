@@ -11,6 +11,8 @@
                 Click="AddToPlaylistButton_Click"/> 
             <Button Content="Прибрати з плейлиста" Padding="12,4" Margin="5,0,0,0"
                     Click="RemoveFromPlaylistButton_Click"/>
+            <Button Content="Видалити з бібліотеки" Padding="12,4" Margin="5,0,0,0"
+                    Click="DeleteFileButton_Click"/>
             <TextBlock Text="Пошук:" VerticalAlignment="Center" Margin="20,0,5,0"/>
             <TextBox Width="200"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>

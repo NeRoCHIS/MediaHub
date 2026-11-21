@@ -57,6 +57,32 @@ public partial class MainWindow : Window
         _viewModel.SelectedPlaylist = null;
     }
     
+    // Кнопка "Видалити з бібліотеки": питаємо підтвердження, зупиняємо плеєр, якщо цей файл грає
+    private async void DeleteFileButton_Click(object sender, RoutedEventArgs e)
+    {
+        var file = _viewModel.SelectedFile;
+        if (file == null)
+        {
+            _viewModel.Status = "Спочатку виберіть файл у таблиці";
+            return;
+        }
+
+        var answer = MessageBox.Show(
+            $"Видалити «{file.Title}» з бібліотеки?\nСам файл на диску залишиться.",
+            "Підтвердження", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (answer != MessageBoxResult.Yes)
+            return;
+
+        if (_currentFile?.Id == file.Id)
+        {
+            _player.Stop();
+            _currentFile = null;
+        }
+
+        await _viewModel.DeleteSelectedFileAsync();
+    }
+    
     // Кнопка "В плейлист...": показує меню з усіма плейлистами
     private void AddToPlaylistButton_Click(object sender, RoutedEventArgs e)
     {

@@ -45,4 +45,35 @@ public class PlaylistTests : IDisposable
             Assert.Equal("Song", playlist.Items[0].MediaFile.Title);
         }
     }
+    
+    [Fact]
+    public async Task DeletingFile_RemovesItFromPlaylists()
+    {
+        using (var db = new MediaDbContext(_dbPath))
+        {
+            await db.Database.EnsureCreatedAsync();
+
+            var playlist = new Playlist { Name = "Gym" };
+            playlist.Items.Add(new PlaylistItem
+            {
+                MediaFile = new AudioTrack { FilePath = "a.mp3", Title = "Song" }
+            });
+
+            db.Playlists.Add(playlist);
+            await db.SaveChangesAsync();
+        }
+
+        using (var db = new MediaDbContext(_dbPath))
+        {
+            var file = await db.MediaFiles.SingleAsync();
+            db.MediaFiles.Remove(file);
+            await db.SaveChangesAsync();
+        }
+
+        using (var db = new MediaDbContext(_dbPath))
+        {
+            Assert.Equal(0, await db.PlaylistItems.CountAsync());
+            Assert.Equal(1, await db.Playlists.CountAsync());
+        }
+    }
 }
