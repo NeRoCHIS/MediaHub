@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using MediaHub.Core.Models;
 using Microsoft.Win32;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace MediaHub.App;
 
@@ -131,6 +133,35 @@ public partial class MainWindow : Window
         _currentFile = file;
         _player.Play(file);
         _viewModel.Status = $"Грає: {file.Title}";
+
+        // Панель "Зараз грає"
+        NowTitle.Text = file.Title;
+        if (file is AudioTrack audio)
+        {
+            NowArtist.Text = audio.Artist ?? "Невідомий виконавець";
+            CoverImage.Source = ToImage(audio.CoverImage);
+        }
+        else
+        {
+            NowArtist.Text = "Відео";
+            CoverImage.Source = null;
+        }
+    }
+
+    // Перетворює байти обкладинки з бази на картинку для WPF
+    private static BitmapImage? ToImage(byte[]? data)
+    {
+        if (data == null || data.Length == 0)
+            return null;
+
+        var image = new BitmapImage();
+        using var stream = new MemoryStream(data);
+        image.BeginInit();
+        image.CacheOption = BitmapCacheOption.OnLoad;
+        image.StreamSource = stream;
+        image.EndInit();
+        image.Freeze();
+        return image;
     }
 
     // Коли файл відкрито, знаємо його тривалість: задаємо межу смуги прогресу
