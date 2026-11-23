@@ -93,7 +93,8 @@
                     <Button Content="Видалити з бібліотеки" Click="DeleteFileButton_Click"/>
                 </StackPanel>
 
-                <!-- Таблиця -->
+                
+                                <!-- Таблиця -->
                 <DataGrid Grid.Row="3"
                           ItemsSource="{Binding Files}"
                           SelectedItem="{Binding SelectedFile}"
@@ -101,6 +102,29 @@
                           IsReadOnly="True"
                           SelectionMode="Single"
                           MouseDoubleClick="Grid_MouseDoubleClick">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="10,0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Background="{TemplateBinding Background}"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#2A2A2A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Назва" Binding="{Binding Title}" Width="2*"/>
                         <DataGridTextColumn Header="Виконавець" Binding="{Binding Artist}" Width="*"/>
